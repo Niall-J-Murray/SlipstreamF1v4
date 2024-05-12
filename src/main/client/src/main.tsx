@@ -4,19 +4,28 @@ import App from './App.tsx'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
+import slipstreamLogo from "/src/assets/images/slipstreamLogoBlack.png";
+
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App />,
+        element: <App/>,
     },
     {
-        path: '/cake',
-        element: <div style={{ fontSize: 150 }}>🍰</div>,
+        path: '/home',
+        element:
+            <div>
+                <img
+                    className="h-8 w-auto"
+                    src={slipstreamLogo}
+                    alt="Slipstream Logo"
+                />
+            </div>,
     },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>,
+    <React.StrictMode>
+        <RouterProvider router={router}/>
+    </React.StrictMode>,
 )

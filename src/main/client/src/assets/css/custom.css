@@ -1,0 +1,551 @@
+@font-face {
+    font-family: Font1;
+    font-display: auto;
+    src: url('https://www.formula1.com/etc/designs/fom-website/fonts/F1Bold/Formula1-Bold.ttf') format('truetype'),
+    url('https://www.formula1.com/etc/designs/fom-website/fonts/F1Regular/Formula1-Regular.ttf') format('truetype'),
+    url('https://www.formula1.com/etc/designs/fom-website/fonts/F1Wide/Formula1-Wide.ttf') format('truetype'),
+    url('https://www.formula1.com/etc/designs/fom-website/fonts/F1Wide/Formula1-Black.ttf') format('truetype');
+}
+
+.loader {
+    position: absolute;
+    top: calc(50% - 4em);
+    left: calc(50% - 4em);
+    width: 6em;
+    height: 6em;
+    border: 1.1em solid rgba(255, 255, 255, 0.5);
+    border-left: 1.1em solid #ffffff;
+    border-radius: 50%;
+    animation: load8 2.1s infinite linear;
+    transition: opacity 0.5s;
+}
+
+@keyframes load8 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader--hide {
+    opacity: 0;
+}
+
+.loading-gif {
+    margin: auto;
+    width: 100vw;
+    display: flex;
+    height: 100vh;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    filter: grayscale(100%);
+    /*opacity: 80%;*/
+}
+
+.loading-gif > img {
+    display: inline-block;
+    width: 150px;
+}
+
+body {
+    font-family: Font1, Arial, Helvetica, sans-serif;
+    color: white;
+    text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
+    background-color: black;
+}
+
+
+.text-block,
+.text-block a {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    color: white;
+    text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
+}
+
+.container {
+    padding: 1%;
+}
+
+.navbar {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 100%;
+    min-width: 2000px;
+}
+
+.nav-link {
+    padding: 25px;
+    margin: 0 15px;
+
+}
+
+.box-shadow {
+    /*padding-top: 1%;*/
+    /*padding-left: 2%;*/
+    padding: 0% 2%;
+    box-shadow: inset 0 0 25em 25em rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.home-text {
+    padding: 1%;
+    box-shadow: inset 0 0 25em 25em rgba(0, 0, 0, 0.75);
+}
+
+.navbar-dark {
+    width: 100%;
+    background-color: black;
+}
+
+.form-group {
+    padding: 1%;
+}
+
+.toggle-span {
+    padding-top: 3%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.draft-span {
+    padding-top: 5%;
+    display: flex;
+    justify-content: space-around;
+}
+
+/*.form-table,*/
+/*.form-table caption {*/
+/*    color: white;*/
+/*    text-align: center;*/
+/*}*/
+
+.error-message {
+    color: orangered;
+    text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
+}
+
+a {
+    font-family: Font1, Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+/*a:hover{*/
+/*    color:#2ecc71;*/
+/*}*/
+
+/*.main{*/
+/*    width: 100%;*/
+/*}*/
+
+/*.sub-main{*/
+/*    width: 30%;*/
+/*    margin:22px;*/
+/*    float: left;*/
+/*}*/
+
+/*.btn{*/
+/*    text-align: center;*/
+/*    cursor: pointer;*/
+/*    font-size:24px;*/
+/*    margin: 0 0 0 100px;*/
+/*}*/
+
+.btn-proceed,
+.btn-dropdown {
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: red;
+    border: none;
+    padding: 5px;
+    width: 220px;
+    transition: all 0.5s;
+}
+
+.btn-proceed span,
+.btn-dropdown span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.btn-proceed span:after {
+    content: '⇀';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.btn-dropdown span:after {
+    content: '⇃';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    /*left: 20px;*/
+    right: -20px;
+    transition: 0.5s;
+}
+
+.btn-proceed:hover span,
+.btn-dropdown:hover span {
+    padding-right: 25px;
+}
+
+.btn-proceed:hover span:after,
+.btn-dropdown:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.btn-proceed,
+.btn-dropdown,
+.btn-link {
+    font-family: Font1, Arial, Helvetica, sans-serif;
+    background-color: red;
+    color: white;
+}
+
+.btn-proceed:hover {
+    background-color: orangered;
+}
+
+.btn-proceed:focus,
+.btn-dropdown:focus {
+    background-color: #2ea44f;
+}
+
+.btn-disabled {
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+    padding: 5px;
+    width: 200px;
+}
+
+a:hover,
+.btn-link:hover {
+    color: #2ea44f;
+}
+
+.pick-instructions-wait {
+    color: orangered;
+    text-decoration-line: underline
+}
+
+.pick-instructions-go {
+    color: #2ea44f;
+    text-decoration-line: underline
+}
+
+#driver-radio {
+    accent-color: #2ea44f;
+}
+
+.selected-cell {
+    background-color: #2ea44f;
+    opacity: 100%;
+}
+
+/*#pick-radio {*/
+/*    background-color: #2ea44f;*/
+/*}*/
+
+/*#driver-radio{*/
+/*    background-color: orangered;*/
+/*}*/
+
+/*#driver-radio:checked {*/
+/*    background-color: #2ea44f;*/
+/*}*/
+
+/*.selected-row {*/
+/*    background-color: #2ea44f;*/
+/*}*/
+
+/*.highlight {*/
+/*    background-color: #2ea44f;*/
+/*}*/
+
+/*input[type='radio']:after {*/
+/*    width: 15px;*/
+/*    height: 15px;*/
+/*    border-radius: 15px;*/
+/*    top: -2px;*/
+/*    left: -1px;*/
+/*    position: relative;*/
+/*    background-color: #d1d3d1;*/
+/*    content: '';*/
+/*    display: inline-block;*/
+/*    visibility: visible;*/
+/*    border: 2px solid white;*/
+/*}*/
+
+/*input[type='radio']:checked:after {*/
+/*    width: 15px;*/
+/*    height: 15px;*/
+/*    border-radius: 15px;*/
+/*    top: -2px;*/
+/*    left: -1px;*/
+/*    position: relative;*/
+/*    background-color: #ffa500;*/
+/*    content: '';*/
+/*    display: inline-block;*/
+/*    visibility: visible;*/
+/*    border: 2px solid white;*/
+/*}*/
+
+#confirm-pick,
+#confirm-pick-dis,
+#confirm-test-pick {
+    background-color: orangered;
+}
+
+#confirm-pick:hover,
+#confirm-test-pick:hover {
+    background-color: #2ea44f;
+}
+
+/*#pick-button,*/
+/*#pick-button-dis,*/
+/*#test-pick-button {*/
+/*    font-family: Font1, Arial, Helvetica, sans-serif;*/
+/*    color: white;*/
+/*    font-weight: bold;*/
+/*    text-decoration-line: underline;*/
+/*    padding: 0;*/
+/*    border: none;*/
+/*    background: none;*/
+/*}*/
+
+/*.confirm-pick,*/
+/*.confirm-pick-dis,*/
+/*.confirm-test-pick {*/
+/*    background-color: orangered;*/
+/*}*/
+
+/*.confirm-pick:hover,*/
+/*.confirm-test-pick:hover {*/
+/*    background-color: #2ea44f;*/
+/*}*/
+
+/*.pick-button,*/
+/*.pick-button-dis,*/
+/*.test-pick-button {*/
+/*    padding: 0;*/
+/*    border: none;*/
+/*    background: none;*/
+/*}*/
+
+/*input[type='radio'] {*/
+/*    border: 1px solid black;*/
+/*    padding: 0;*/
+/*}*/
+
+.test-page {
+    display: flex;
+    justify-content: center;
+    /*align-content: center;*/
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+}
+
+.test-table,
+.test-table th,
+.test-table td {
+    /*background-color: gray;*/
+    table-layout: auto;
+    padding: 2px;
+    border: 1px solid black;
+    /*background-color: black;*/
+    color: black;
+    text-shadow: none;
+    text-align: center;
+}
+
+.form-check-label {
+    padding: 0;
+}
+
+.league-table {
+    /*margin: 0 1%;*/
+    /*border-collapse: separate;*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+    /*word-wrap: break-word;*/
+    /*table-layout: fixed;*/
+    /*caption-side: top;*/
+    table-layout: auto;
+    width: 100%;
+    opacity: 80%;
+}
+
+.league-table thead th {
+    /*table-layout: auto;*/
+    table-layout: auto;
+    /*width: 100%;*/
+    padding: 2px;
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    text-shadow: none;
+}
+
+#username,
+#team-name {
+    padding: 2px 20px;
+}
+
+.league-table td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+.league-table caption,
+.drivers-table caption,
+.undrafted-drivers-table caption {
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+th:first-of-type {
+    border-top-left-radius: 10px;
+}
+
+th:last-of-type {
+    border-top-right-radius: 10px;
+}
+
+tr:last-of-type td:first-of-type {
+    border-bottom-left-radius: 10px;
+}
+
+tr:last-of-type td:last-of-type {
+    border-bottom-right-radius: 10px;
+}
+
+.league-table td,
+.league-table th {
+    border: 1px solid white;
+}
+
+.league-table tr:nth-child(even),
+.league-table caption {
+    text-align: center;
+    background-color: black;
+    color: white;
+}
+
+.league-table tr:nth-child(odd) {
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+    text-shadow: none;
+}
+
+.undrafted-drivers-table {
+    table-layout: auto;
+    /*padding: 11px 2px;*/
+    /*border: 1px solid white;*/
+    /*background-color: black;*/
+    color: white;
+    text-shadow: none;
+}
+
+.drivers-table {
+    table-layout: auto;
+    width: 100%;
+    opacity: 80%;
+
+    /*margin: 0 1%;*/
+    /*border-collapse: separate;*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+    /*word-wrap: break-word;*/
+    /*table-layout: fixed;*/
+    /*caption-side: top;*/
+}
+
+.drivers-table thead th {
+    table-layout: auto;
+    padding: 11px 2px;
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    text-shadow: none;
+
+    /*table-layout: auto;*/
+    /*width: 100%;*/
+    /*table-layout: auto;*/
+    /*!*width: 100%;*!*/
+    /*margin: 0 1%;*/
+    /*border: 1px solid white;*/
+    /*background-color: black;*/
+    /*color: white;*/
+    /*text-shadow: none;*/
+}
+
+.undrafted-drivers-table thead th {
+    table-layout: auto;
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    text-shadow: none;
+}
+
+/*.drivers-table td,*/
+/*.undrafted-drivers-table td{*/
+/*    border: 1px solid black;*/
+/*    text-align: center;*/
+/*}*/
+
+/*.drivers-table .username {*/
+/*    width: 75%;*/
+/*}*/
+
+caption {
+    text-align: center;
+    background-color: black;
+}
+
+td {
+    border: 1px solid white;
+}
+
+/*.drivers-table td,*/
+/*.drivers-table th,*/
+/*.drivers-table caption,*/
+/*.undrafted-drivers-table td,*/
+/*.undrafted-drivers-table th,*/
+/*.undrafted-drivers-table caption{*/
+/*    border: 1px solid white;*/
+/*}*/
+
+.drivers-table tr:nth-child(even),
+.undrafted-drivers-table tr:nth-child(even) {
+    border: 5px solid white;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+.drivers-table tr:nth-child(odd),
+.undrafted-drivers-table tr:nth-child(odd) {
+    border: 5px solid black;
+    background-color: white;
+    color: black;
+    text-align: center;
+    text-shadow: none;
+}
+
+.draft-table tr:hover {
+    background-color: orangered;
+}
