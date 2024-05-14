@@ -35,5 +35,9 @@ build/
 ### MacOS ###
 .DS_Store
 
+### ENV Files ###
+.env
+application.properties
+
 ### Dynamically generated ###
 /src/main/resources/static/
