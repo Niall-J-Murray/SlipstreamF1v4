@@ -41,3 +41,4 @@ application.properties
 
 ### Dynamically generated ###
 /src/main/resources/static/
+/src/main/resources/slipstream/
