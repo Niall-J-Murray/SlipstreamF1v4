@@ -18,7 +18,7 @@ interface DashTopProps {
     message: string,
     handleCreateTeam: (formValue: { teamName: string }) => void,
     handleDeleteUserTeam: (e: { preventDefault: () => void }) => void,
-    driversInTeam: (teamId: (number | null | undefined)) => UseQueryResult<IDriver[], unknown>
+    driversInTeam: (teamId: (number | null | undefined)) => UseQueryResult<IDriver[]>
     // driversInTeam: (teamId: (number | null | undefined)) => QueryObserverIdleResult<Array<IDriver>, unknown> | QueryObserverLoadingErrorResult<Array<IDriver>, unknown> | QueryObserverLoadingResult<Array<IDriver>, unknown> | QueryObserverRefetchErrorResult<Array<IDriver>, unknown> | QueryObserverSuccessResult<Array<IDriver>, unknown>
 }
 
@@ -52,7 +52,15 @@ export default function DashTop({
                 }
             }
         )
+        // console.log(loading)
+        // console.log(ErrorMessage)
+        // console.log(initialValues)
+        // console.log(validationSchema)
+        // console.log(message)
+        // console.log(handleCreateTeam)
         return isAdmin;
+
+
     }
 
     function CreateTeam() {
@@ -71,9 +79,9 @@ export default function DashTop({
                 >
                     <Form className={"col-start-1 col-span-3"}>
                         <div className="form-group">
-                            <label htmlFor="teamName">Choose a team name to get started:</label>
-                            <br/>
-                            <Field name="teamName" type="text" className="form-control" required/>
+                            {/*<label htmlFor="teamName">Choose a team name to get started:*/}
+                            <legend>Choose a team name to get started:</legend>
+                            <Field id="teamName" name="teamName" type="text" className="form-control" required/>
                         </div>
                         <div className="form-group">
                             <button type="submit" className="btn btn-proceed" disabled={loading}>
