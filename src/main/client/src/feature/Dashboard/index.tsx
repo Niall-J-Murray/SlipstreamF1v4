@@ -139,13 +139,6 @@ export default function Dashboard({userData}: DashboardProps) {
             navigate("/login");
         }
 
-        if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {
-            setIsUsersTurnToPick(true);
-        } else {
-            queryClient.invalidateQueries()
-                .then(()=>setIsUsersTurnToPick(false));
-        }
-
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
         setIsPracticeLeague(leagueData?.isPracticeLeague);
@@ -157,7 +150,16 @@ export default function Dashboard({userData}: DashboardProps) {
             if (!leagueData?.isActive) {
                 setIsDraftInProgress(true);
                 setShowDraftPickTips(false);
-                // setToggleNextToPickQuery(true);
+                if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {
+                    setIsUsersTurnToPick(true);
+                }
+                // Todo Fix invalidateQueries() to only trigger when draft in progress and reasonable intervals
+                else {
+                    setTimeout(() => {
+                        queryClient.invalidateQueries()
+                            .then(() => setIsUsersTurnToPick(false));
+                    }, 5000);
+                }
             }
         }
 
@@ -172,14 +174,16 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsLeagueActive(true);
         }
 
+        //Check dependencies for infinite loop
     }, [userData, loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber, lastDriverPicked]);
+    // }, [userData, loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber, lastDriverPicked]);
 
     const handleCreateTeam = (formValue: { teamName: string }) => {
         const {teamName} = formValue;
-
-        setMessage("");
-        setLoading(true);
-
+        console.log(teamName)
+        // setMessage("");
+        // setLoading(true);
+        //
         createTeam.mutateAsync({userId, teamName})
             .then(() => {
                     queryClient.invalidateQueries()

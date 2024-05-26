@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +26,6 @@ public class DriverController {
   UserService userService;
   @Autowired
   TeamService teamService;
-  @Autowired
-  SseController sseController;
 
   @GetMapping("/{driverId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -55,13 +52,6 @@ public class DriverController {
     if (team != null) {
       driversInTeam = team.getDrivers();
     }
-//    Long driverId1 = team.getDrivers().get(0).getDriverId();
-//    Long driverId2 = team.getDrivers().get(1).getDriverId();
-//    Driver driver1 = driverService.findById(driverId1);
-//    Driver driver2 = driverService.findById(driverId2);
-//    driversInTeam.add(driver1);
-//    driversInTeam.add(driver2);
-//    System.out.println("driver entity: " + ResponseEntity.ok(driverOpt.orElse(null)));
     return ResponseEntity.ok(driversInTeam);
   }
 
@@ -74,7 +64,7 @@ public class DriverController {
   }
 
   @PostMapping("/pick/{userId}")
-  public ResponseEntity<Boolean> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) throws IOException {
+  public ResponseEntity<Boolean> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) {
     System.out.println("postPickDriver driverID: " + requestData.get("driverId"));
     Long driverId = requestData.get("driverId");
     Long userLeagueId = userService.findById(userId).getTeam().getLeague().getId();
@@ -84,15 +74,8 @@ public class DriverController {
     } else {
       teamService.addDriverToTeam(userId, driverId);
     }
-    Driver driver = driverService.findById(driverId);
-    //Async send email to next to pick
-//    emailService.asyncPickNotificationEmail(userLeague);
-//    sseController.testPickMade(userId, driver.getSurname());
-//    sseController.pickMade(userId);
-    sseController.pickMadeTest(userId);
-//    sseController.pickMade(userId);
-//    sseController.pickMade();
-//    return ResponseEntity.ok(driver);
+//    Driver driver = driverService.findById(driverId);
+
     return ResponseEntity.ok(true);
   }
 }
