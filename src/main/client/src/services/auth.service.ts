@@ -1,7 +1,8 @@
 import axios from "axios";
 import IUser from "../types/user.type.ts";
 
-const API_URL = "http://localhost:8080/api/auth/";
+// const API_URL = "http://localhost:8080/api/auth/";
+const API_URL = "/api/auth/";
 
 export const register = (username: string, email: string, password: string) => {
     return axios.post(API_URL + "register", {
