@@ -13,24 +13,21 @@ interface LogoutProps {
     userData: undefined | IUser
 }
 
-export default function Logout({userData}: LogoutProps) {
+export default function SignOut({userData}: LogoutProps) {
     const redirect: NavigateFunction = useNavigate();
     const logOut = () => {
-        AuthService.logout(getUserFromLocalStorage()?.id);
-        // setShowModeratorBoard(false);
-        // setShowAdminBoard(false);
-        // setCurrentUser(undefined);
+        AuthService.signOut(getUserFromLocalStorage()?.id);
         redirect("/home");
         window.location.reload();
     };
 
     useEffect(() => {
         if (!userData) {
-            redirect("/login");
+            redirect("/signin");
         }
     }, []);
 
-    function LogOutForm() {
+    function SignOutForm() {
         return (
             <div className="grid grid-cols-7 gap-3 p-5">
                 <img
@@ -40,12 +37,11 @@ export default function Logout({userData}: LogoutProps) {
                     height={180}
                     width={330}
                     alt="red-lights"
-
                 />
                 <div className={"col-start-2 col-span-5 p-1"}>
                     <div className={"p-6"}>Are you sure...?</div>
                     <button className="btn btn-proceed" type="submit" onClick={logOut}>
-                        <span>Confirm Logout</span>
+                        <span>Confirm Sign Out</span>
                     </button>
                 </div>
             </div>
@@ -60,7 +56,7 @@ export default function Logout({userData}: LogoutProps) {
                     <Body>
                         <div className="grid grid-cols-5 gap-2">
                             <div className="col-start-3 col-span-1 box-shadow">
-                                <LogOutForm/>
+                                <SignOutForm/>
                             </div>
                         </div>
                     </Body>

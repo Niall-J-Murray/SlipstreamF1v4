@@ -1,39 +1,44 @@
 import axios from "axios";
 import IUser from "../types/user.type.ts";
+import {Env} from "../Env.ts";
 
-const API_URL = "/api/auth/";
+// const API_URL = "http://localhost:8080/api/auth/";
+// const API_URL = "/api/auth/";
+//  const API_URL = "${Env.API_BASE_URL}";
+const API_URL = `${Env.API_BASE_URL}/auth/`;
 
-export const register = (username: string, email: string, password: string) => {
-    return axios.post(API_URL + "register", {
+export const signUp = (username: string, email: string, password: string) => {
+    return axios.post(API_URL + "signup", {
         username,
         email,
         password,
     });
 };
 
-export const login = (username: string, password: string) => {
+// Todo Check async signIn
+export const signIn = (username: string, password: string) => {
     return axios
-        .post(API_URL + "login", {
+        .post(API_URL + "signin", {
             username,
             password,
         })
         .then((response) => {
             if (response.data.accessToken) {
                 localStorage.setItem("user", JSON.stringify(response.data));
+                localStorage.setItem("signInDate", new Date().toDateString());
             }
-
             return response.data;
         });
 };
 
-export const logout = (userId: number | null | undefined) => {
-    void updateOnLogout(userId);
+export const signOut = (userId: number | null | undefined) => {
+    void updateOnSignOut(userId);
     localStorage.removeItem("user")
 };
 
-export const updateOnLogout = (userId: number | null | undefined) => {
+export const updateOnSignOut = (userId: number | null | undefined) => {
     return axios
-        .post(API_URL + "logout", {
+        .post(API_URL + "signout", {
             userId,
         })
 };

@@ -21,8 +21,6 @@ export default function DraftInProgress({
                                             handlePick
                                         }: DraftInProgressProps) {
 
-    // const formattedLastPickTime = (lastPickTime?.toLocaleTimeString() + " " + lastPickTime?.toLocaleDateString())
-
     if (isUsersTurnToPick) {
         return (
             <div className="grid grid-cols-2">
@@ -36,9 +34,6 @@ export default function DraftInProgress({
                     </div>
                 </div>
                 <div className="col-start-1 col-span-3 draft-span">
-                    {/*<div className={"pick-instructions-go"}>*/}
-                    {/*    It's {nextUserToPick?.username}'s pick*/}
-                    {/*</div>*/}
                     {nextUserToPick?.isTestUser ?
                         <div>
                             Select a driver
@@ -120,99 +115,4 @@ export default function DraftInProgress({
             </div>
         );
     }
-}
-
-
-{/*                {selectedDriver*/
-}
-{/*                    ?*/
-}
-{/*                    <div className="col-start-1 col-span-3 draft-span">*/
-}
-{/*                        <div>*/
-}
-{/*                            You have selected:*/
-}
-{/*                        </div>*/
-}
-{/*                        <div>*/
-}
-{/*                            {selectedDriver?.firstName + " " + selectedDriver?.surname}*/
-}
-{/*                        </div>*/
-}
-{/*                        <div>*/
-}
-{/*                            <button onClick={(e) => handlePick(e, selectedDriver.driverId)}*/
-}
-{/*                                    className={"btn btn-proceed"}*/
-}
-{/*                                    type="submit">*/
-}
-{/*                                Confirm Pick*/
-}
-{/*                            </button>*/
-}
-{/*                        </div>*/
-}
-{/*                    </div>*/
-}
-{/*                    :*/
-}
-{/*                    <div className="col-start-1 col-span-3 toggle-span">*/
-}
-{/*                        <h4>*/
-}
-{/*                            You have selected:*/
-}
-{/*                        </h4>*/
-}
-{/*                        <h4>*/
-}
-{/*                            <p>Select a driver below...</p>*/
-}
-{/*                        </h4>*/
-}
-{/*                        <h4>*/
-}
-{/*                            <div>*/
-}
-{/*                                <button onClick={(e) => handlePick(e, selectedDriverId)}*/
-}
-{/*                                        className={"btn btn-disabled"}*/
-}
-{/*                                        type="submit"*/
-}
-{/*                                        disabled={!selectedDriver}>*/
-}
-{/*                                    Confirm Pick*/
-}
-{/*                                </button>*/
-}
-{/*                            </div>*/
-}
-{/*                        </h4>*/
-}
-{/*                    </div>*/
-}
-{/*                }*/
-}
-{/*            </>*/
-}
-{/*        );*/
-}
-{/*    }*/
-}
-
-{/*    return (*/
-}
-{/*        <>*/
-}
-{/*            <PickInstructions/>*/
-}
-{/*        </>*/
-}
-{/*    )*/
-}
-{/*}*/
 }

@@ -7,24 +7,17 @@ interface PracticeDraftProps {
     togglePracticeOptions: () => void
 }
 
-export default function PracticeDraft({isPracticeLeague, isLeagueFull, togglePracticeLeague, addTestTeam}: PracticeDraftProps) {
-    // const [leagueSize, setLeagueSize] = useState()
-    // useEffect(() => {
-    //     setLeagueSize(leagueData?.teams?.length)
-    // }, [leagueSize]);
+export default function PracticeDraft({
+                                          isPracticeLeague,
+                                          isLeagueFull,
+                                          togglePracticeLeague,
+                                          addTestTeam
+                                      }: PracticeDraftProps) {
 
     function PracticeDraftNotActive() {
         return (
             <>
                 <div>
-                    {/*<div className={"toggle-span"}>*/}
-                    {/*    Want to try a practice draft?*/}
-                    {/*<PracticeOptionsToggle*/}
-                    {/*    isPracticeLeague={isPracticeLeague}*/}
-                    {/*    showDraftPickTips={showDraftPickTips}*/}
-                    {/*    togglePracticeOptions={togglePracticeOptions}*/}
-                    {/*/>*/}
-                    {/*</div>*/}
                     <h4>Want to try a practice draft?</h4>
                 </div>
                 <div>
@@ -55,38 +48,39 @@ export default function PracticeDraft({isPracticeLeague, isLeagueFull, togglePra
     }
 
     function PracticeDraftActive() {
-        return <>
-            <div>
-                <h4>For Practice Draft:</h4>
-                <ul className="text-block">
-                    <li>To see how the game works, you can add dummy test teams to this league for a practice draft.
-                    </li>
-                    <li>Test teams can be deleted after the practice draft, or will be automatically deleted after 24
-                        hours.
-                    </li>
-                    <li>Any non-test teams can be left in this league, or deleted to join a new league.</li>
-                </ul>
-            </div>
-            {isLeagueFull ?
+        return (
+            <>
                 <div>
-                    This league is full, players can now begin selecting their drivers.
+                    <h4>For Practice Draft:</h4>
+                    <ul className="text-block">
+                        <li>To see how the game works, you can add dummy test teams to this league for a practice draft.
+                        </li>
+                        <li>Test teams can be deleted after the practice draft, or will be automatically deleted after
+                            24
+                            hours.
+                        </li>
+                        <li>Any non-test teams can be left in this league, or deleted to join a new league.</li>
+                    </ul>
                 </div>
-                :
-                <div>
+                {isLeagueFull ?
                     <div>
-                        <h5>Click below to add a test team to this league:</h5>
-                        <div>
-                            <button className="btn btn-proceed" id="test-team-button" type="submit"
-                                    onClick={(e) => {
-                                        addTestTeam(e)
-                                    }}>
-                                Add Test Team
-                            </button>
-                        </div>
+                        This league is full, players can now begin selecting their drivers.
                     </div>
-                </div>
-            }
-        </>
+                    :
+                    <div>
+                    <span className={"pr-3"}>
+                        Click to add test team to this league -
+                    </span>
+                        <button className="btn btn-proceed" id="test-team-button" type="submit"
+                                onClick={(e) => {
+                                    addTestTeam(e)
+                                }}>
+                            Add Test Team
+                        </button>
+                    </div>
+                }
+            </>
+        );
     }
 
     function PracticeDraftToggle() {
@@ -98,8 +92,6 @@ export default function PracticeDraft({isPracticeLeague, isLeagueFull, togglePra
     }
 
     return (
-        <>
-            <PracticeDraftToggle/>
-        </>
+        <PracticeDraftToggle/>
     );
 }

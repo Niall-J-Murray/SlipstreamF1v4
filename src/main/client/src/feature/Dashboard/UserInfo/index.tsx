@@ -4,6 +4,7 @@ import IDriver from "../../../types/driver.type.ts";
 import IUser from "../../../types/user.type.ts";
 import ILeague from "../../../types/league.type.ts";
 import {UseQueryResult} from "react-query";
+import {Link} from "react-router-dom";
 
 interface DashTopProps {
     userData: IUser | undefined,
@@ -22,7 +23,7 @@ interface DashTopProps {
     // driversInTeam: (teamId: (number | null | undefined)) => QueryObserverIdleResult<Array<IDriver>, unknown> | QueryObserverLoadingErrorResult<Array<IDriver>, unknown> | QueryObserverLoadingResult<Array<IDriver>, unknown> | QueryObserverRefetchErrorResult<Array<IDriver>, unknown> | QueryObserverSuccessResult<Array<IDriver>, unknown>
 }
 
-export default function DashTop({
+export default function UserInfo({
                                     userData,
                                     leagueData,
                                     leagueSize,
@@ -43,7 +44,7 @@ export default function DashTop({
     const firstPickNumber = userData?.team?.firstPickNumber
     const secondPickNumber = userData?.team?.secondPickNumber
     const driversInUserTeam = driversInTeam(userData?.team?.id).data;
-    // team.drivers = driversInTeam(team.id).data
+
     const isAdmin = (user: IUser | undefined) => {
         let isAdmin = false;
         user?.roles?.map(role => {
@@ -52,15 +53,7 @@ export default function DashTop({
                 }
             }
         )
-        // console.log(loading)
-        // console.log(ErrorMessage)
-        // console.log(initialValues)
-        // console.log(validationSchema)
-        // console.log(message)
-        // console.log(handleCreateTeam)
         return isAdmin;
-
-
     }
 
     function CreateTeam() {
@@ -110,14 +103,15 @@ export default function DashTop({
     }
 
     function AdminGreeting() {
-        return <div>
-            <h3>{username}'s Dashboard </h3>
-            <hr/>
-            <h3>Sorry, admins cannot play!</h3>
-            <h3><a href="/admin">Go to admin dashboard</a></h3>
-            <h3>- or -</h3>
-            <h3><a href="/register">Register for a user account</a></h3>
-        </div>;
+        return (
+            <div>
+                <h3>{username}'s Dashboard </h3>
+                <hr/>
+                <h3>Sorry, admins cannot play!</h3>
+                <h3><Link to="/admin">Go to admin dashboard</Link></h3>
+                <h3>- or -</h3>
+                <h3><Link to="/signup">Register for a user account</Link></h3>
+            </div>);
     }
 
     // function PracticeGreeting() {
@@ -224,10 +218,6 @@ export default function DashTop({
     }
 
     return (
-        <>
-            {/*<div>*/}
-            <Greeting/>
-            {/*</div>*/}
-        </>
+        <Greeting/>
     );
 }

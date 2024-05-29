@@ -14,7 +14,6 @@ interface PracticeDraftOptionsProps {
 export default function PracticeDraftOptions({isPracticeLeague, isLeagueFull, showDraftPickTips, togglePracticeOptions, togglePracticeLeague, addTestTeam}: PracticeDraftOptionsProps) {
     return (
         <>
-            {/*{showPracticeOptions ?*/}
             <div className="col-start-1 col-span-5">
                 <PracticeDraft
                     isPracticeLeague={isPracticeLeague}
@@ -25,15 +24,6 @@ export default function PracticeDraftOptions({isPracticeLeague, isLeagueFull, sh
                     togglePracticeOptions={togglePracticeOptions}
                 />
             </div>
-            {/*        :*/}
-            {/*        <div className="col-start-1 col-span-5">*/}
-            {/*            <PracticeOptionsToggle*/}
-            {/*                isPracticeLeague={isPracticeLeague}*/}
-            {/*                showPracticeOptions={showPracticeOptions}*/}
-            {/*                togglePracticeOptions={togglePracticeOptions}*/}
-            {/*            />*/}
-            {/*        </div>*/}
-            {/*}*/}
         </>
     )
 }

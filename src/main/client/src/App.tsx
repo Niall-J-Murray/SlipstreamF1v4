@@ -1,10 +1,11 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import "./App.css";
-import {getUserFromLocalStorage, logout} from "./services/auth.service";
+import {signOut as authSignOut, getUserFromLocalStorage} from "./services/auth.service";
 import Home from "./feature/Home";
-import Login from "./feature/Login";
-import Register from "./feature/Register";
-import Logout from "./feature/Logout";
+import SignIn from "./auth-components/SignIn";
+import SignUp from "./auth-components/SignUp";
+import SignOut from "./auth-components/SignOut";
+import Profile from "./auth-components/Profile";
 import Dashboard from "./feature/Dashboard";
 import Admin from "./feature/Admin";
 import {useEffect, useState} from "react";
@@ -19,19 +20,22 @@ export default function App() {
         = useState<IUser | undefined>();
 
     useEffect(() => {
+        let lastSignIn = localStorage.getItem("signInDate");
+        if (lastSignIn && lastSignIn < new Date().toDateString()) {
+            authSignOut(currentUser?.id)
+        }
         const user = getUserFromLocalStorage();
-        // console.log;(user)
         if (user) {
             setCurrentUser(user);
         }
-        EventBus.on("logout", logOut);
+        EventBus.on("signout", signOut);
         return () => {
-            EventBus.remove("logout", logOut);
+            EventBus.remove("signout", signOut);
         };
     }, []);
 
-    const logOut = () => {
-        logout(currentUser?.id);
+    const signOut = () => {
+        authSignOut(currentUser?.id);
     }
 
     const {
@@ -40,7 +44,7 @@ export default function App() {
         // status: statUserAuth,
         error: errUserAuth,
     } = useUserAuth();
-    // const userId = userAuth ? userAuth.id : null;
+
     const {
         data: userData,
         isLoading: userDataLoading,
@@ -52,44 +56,34 @@ export default function App() {
     const isLoading = userAuthLoading || userDataLoading;
     const error = errUserAuth || errUserData;
 
-    if (isLoading) {
-        return <>{showLoader()}</>
-        // showLoader();
+    if (error) {
+        return (
+            <SignIn userData={userData} error={error}/>
+        );
+    } else if (isLoading) {
+        // toggleLoading={props.toggleLoading}
+        showLoader()
     } else {
         hideLoader();
+        return (
+            <>
+                <div className="container">
+                    <BrowserRouter basename={"/slipstream"}>
+                        <Routes>
+                            <Route path="/" element={<Home userData={userData}/>}/>
+                            <Route path="/home" element={<Home userData={userData}/>}/>
+                            <Route path="/signup" element={<SignUp userData={userData}/>}/>
+                            <Route path="/signin" element={<SignIn userData={userData} error={error}/>}/>
+                            <Route path="/profile" element={<Profile userData={userData}/>}/>
+                            <Route path="/dashboard" element={<Dashboard userData={userData}/>}/>
+                            <Route path="/admin" element={<Admin userData={userData}/>}/>
+                            <Route path="/signout" element={<SignOut userData={userData}/>}/>
+                        </Routes>
+                    </BrowserRouter>
+                </div>
+            </>
+        );
     }
-
-    if (error) {
-        return (<Login userData={userData} error={error}/>);
-    }
-
-    // if (statUserAuth === "loading") return <>showLoader()</>;
-    // if (statUserAuth === "success") hideLoader();
-    // if (statUserAuth === "error") return <h1>{JSON.stringify(errUserAuth)}</h1>
-    //
-    // if (statUserData === "loading") return <>showLoader()</>;
-    // if (statUserData === "success") hideLoader();
-    // if (statUserData === "error") return <h1>{JSON.stringify(errUserData)}</h1>
-
-    return (
-        <>
-            <div className="container">
-                <BrowserRouter basename={"/slipstream"}>
-                    <Routes>
-                        <Route path="/" element={<Home userData={userData}/>}/>
-                        <Route path="/home" element={<Home userData={userData}/>}/>
-                        <Route path="/register" element={<Register userData={userData}/>}/>
-                        <Route path="/login" element={<Login userData={userData} error={error}/>}/>
-                        <Route path="/dashboard" element={<Dashboard userData={userData}/>}/>
-                        <Route path="/admin" element={<Admin userData={userData}/>}/>
-                        <Route path="/logout" element={<Logout userData={userData}/>}/>
-                        {/*<Route path="/test" element={<TestPage userData={userData}/>}/>*/}
-                        {/*<Route path="/sse" element={<SseTestPage/>}/>*/}
-                    </Routes>
-                </BrowserRouter>
-            </div>
-        </>
-    );
 }
 
 
@@ -99,11 +93,7 @@ export default function App() {
 // import {Env} from "./Env.ts";
 //
 // function App() {
-//     useEffect(() => {
-//         fetch(`${Env.API_BASE_URL}/ping`)
-//             .then(response => response.text())
-//             .then(body => console.log(body));
-//     }, []);
+
 //     return (
 //         <>
 //             <h1>Slipstream F1</h1>
