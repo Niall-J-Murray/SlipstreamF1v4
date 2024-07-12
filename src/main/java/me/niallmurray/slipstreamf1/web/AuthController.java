@@ -134,9 +134,15 @@ public class AuthController {
 
   @PostMapping("/signout")
   public ResponseEntity<?> updateUserLogout(@Valid @RequestBody String request) {
-    Long userId = Long.valueOf(request.substring(10, (request.length()-1)));
-    userService.updateLastLogout(userId);
-    System.out.println("User " + userId + ": '" + userService.findById(userId).getUsername() + "' logged out.");
+    Long userId = Long.valueOf(request.substring(10, (request.length() - 1)));
+
+    User user = userRepository.findById(userId).orElseThrow(null);
+    if (user != null) {
+      userService.updateLastLogout(userId);
+      if (user.getTeam() != null) {
+        teamService.saveAllTeams(user.getTeam().getLeague());
+      }
+    }
     return ResponseEntity.ok(new MessageResponse("Logout Successful"));
   }
 }

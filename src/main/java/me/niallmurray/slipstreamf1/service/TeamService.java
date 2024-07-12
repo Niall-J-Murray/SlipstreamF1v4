@@ -309,6 +309,11 @@ public class TeamService {
     return teamRepository.findAll();
   }
 
+  public void saveAllTeams(League league) {
+    teamRepository.saveAll(findAllTeamsByLeague(league));
+    leagueService.save(league);
+  }
+
   public Team findById(Long teamId) {
     return teamRepository.findById(teamId).orElse(null);
   }

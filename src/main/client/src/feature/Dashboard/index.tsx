@@ -247,15 +247,11 @@ export default function Dashboard({userData}: DashboardProps) {
                         }
                     )
                     .then(() => {
-                        if (isLeagueFull) {
-                            window.location.reload();
-                        }
+                        window.location.reload();
                     })
             })
 
         if (leagueTeams && leagueTeams.length >= 9) {
-            // queryClient.invalidateQueries()
-            //     .then(() => window.location.reload());
             window.location.reload()
         }
     }
