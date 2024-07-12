@@ -47,11 +47,6 @@ public class AuthController {
   @Autowired
   JwtUtils jwtUtils;
 
-//  @GetMapping("/")
-//  public String rootRedirect() {
-//    return "redirect:/home";
-//  }
-
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -105,8 +100,6 @@ public class AuthController {
 
 
     userService.createUser(user);
-//    userRepository.save(user);
-//    Return user to automatically log in and redirect to dashboard?
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
