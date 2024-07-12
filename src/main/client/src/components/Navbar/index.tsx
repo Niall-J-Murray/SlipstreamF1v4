@@ -2,17 +2,21 @@ import slipstreamLogo from "/src/assets/images/slipstreamLogoWhite.png";
 import {Fragment, useEffect, useState} from "react";
 import {Disclosure, Menu, Transition} from "@headlessui/react";
 import {Bars3Icon, XMarkIcon} from "@heroicons/react/24/outline";
-import {getUserFromLocalStorage, logout} from "../../services/auth.service";
+import {getUserFromLocalStorage, signOut} from "../../services/auth.service";
 import IUser from "../../types/user.type.ts";
+import {Link} from "react-router-dom";
 
 const navigation = [
-    {name: "Home", href: "home", current: true},
-    {name: "Register", href: "register", current: false},
-    {name: "Login", href: "login", current: false},
-    {name: "Dashboard", href: "dashboard", current: false},
-    {name: "Admin", href: "admin", current: false},
-    {name: "Log Out", href: "logout", current: false},
+    {name: "Home", href: "/home", current: false},
+    {name: "Sign Up", href: "/signup", current: false},
+    {name: "Sign In", href: "/signin", current: false},
+    {name: "Profile", href: "/profile", current: false},
+    {name: "Dashboard", href: "/dashboard", current: false},
+    {name: "Admin", href: "/admin", current: false},
+    {name: "Sign Out", href: "/signout", current: false},
 ];
+let tailoredNavLinks = navigation;
+
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
@@ -29,22 +33,40 @@ function dropdownName(user: IUser | null | undefined) {
 export default function Navbar() {
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined>();
+    const isAdmin = (user: IUser | undefined) => {
+        let isAdmin = false;
+        user?.roles?.map(role => {
+                if (role.name === "ROLE_ADMIN") {
+                    isAdmin = true;
+                }
+            }
+        )
+        return isAdmin;
+    }
 
     useEffect(() => {
         const user = getUserFromLocalStorage();
         if (user) {
             setCurrentUser(user);
-            // setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-            // setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+            if (isAdmin(user)) {
+                tailoredNavLinks = navigation
+                    .filter(value =>
+                        value.name == "Home" || value.name == "Profile" || value.name == "Dashboard" || value.name == "Admin" || value.name == "Sign Out");
+            } else {
+                tailoredNavLinks = navigation
+                    .filter(value =>
+                        value.name == "Home" || value.name == "Profile" || value.name == "Dashboard" || value.name == "Sign Out");
+            }
+        } else {
+            tailoredNavLinks = navigation
+                .filter(value =>
+                    value.name == "Home" || value.name == "Sign Up" || value.name == "Sign In");
         }
     }, []);
 
 
     const logOut = () => {
-        logout(currentUser?.id);
-        // setShowModeratorBoard(false);
-        // setShowAdminBoard(false);
-        // setCurrentUser(undefined);
+        signOut(currentUser?.id);
     };
 
     return (
@@ -75,20 +97,20 @@ export default function Navbar() {
                                 </div>
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
-                                        {navigation.map((item) => (
-                                            <a
+                                        {tailoredNavLinks.map((item) => (
+                                            <Link
                                                 key={item.name}
-                                                href={item.href}
+                                                to={item.href}
                                                 className={classNames(
                                                     item.current
                                                         ? "bg-black-900 text-white"
-                                                        : "text-black-300 hover:bg-black-700 hover:text-white",
+                                                        : "text-black-300 hover:bg-black-700 hover:text-#2ea44f",
                                                     "rounded-md px-3 py-2 text-sm font-medium"
                                                 )}
                                                 aria-current={item.current ? "page" : undefined}
                                             >
                                                 {item.name}
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>
@@ -117,37 +139,36 @@ export default function Navbar() {
                                             className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-black py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <Menu.Item>
                                                 {({active}) => (
-                                                    <a
-                                                        href="#"
+                                                    <Link
+                                                        to="/dashboard"
                                                         className={classNames(
                                                             active ? "bg-black-100" : "",
                                                             "block px-4 py-2 text-sm text-black-700"
                                                         )}
-                                                    >Dashboard</a>
+                                                    >Dashboard</Link>
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>
                                                 {({active}) => (
-                                                    <a
-                                                        href="#"
+                                                    <Link
+                                                        to="#"
                                                         className={classNames(
                                                             active ? "bg-black-100" : "",
                                                             "block px-4 py-2 text-sm text-black-700"
                                                         )}
-                                                    >Change Password</a>
+                                                    >Change Password</Link>
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>
                                                 {({active}) => (
-                                                    <a
-                                                        href="/home"
+                                                    <Link
+                                                        to="/home"
                                                         onClick={logOut}
-                                                        // onClick={() => [recordLogout, logOut]}
                                                         className={classNames(
                                                             active ? "bg-black-100" : "",
                                                             "block px-4 py-2 text-sm text-black-700"
                                                         )}
-                                                    >Log out</a>
+                                                    >Sign Out</Link>
                                                 )}
                                             </Menu.Item>
                                         </Menu.Items>
@@ -162,12 +183,12 @@ export default function Navbar() {
                             {navigation.map((item) => (
                                 <Disclosure.Button
                                     key={item.name}
-                                    as="a"
-                                    href={item.href}
+                                    as={Link}
+                                    to={item.href}
                                     className={classNames(
                                         item.current
                                             ? "bg-black-900 text-white"
-                                            : "text-black-300 hover:bg-black-700 hover:text-white",
+                                            : "text-black-300 hover:bg-black-700 hover:text-#2ea44f",
                                         "block rounded-md px-3 py-2 text-base font-medium"
                                     )}
                                     aria-current={item.current ? "page" : undefined}
@@ -298,19 +319,19 @@ const Navbar2 = () => {
                                             href="#"
                                             className="text-black-300 hover:bg-black-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                                         >
-                                            Register
+                                            Sign up
                                         </a>
                                         <a
                                             href="#"
                                             className="text-black-300 hover:bg-black-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                                         >
-                                            Login
+                                            Sign In
                                         </a>
                                         <a
                                             href="#"
                                             className="text-black-300 hover:bg-black-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                                         >
-                                            Log Out
+                                            Sign Out
                                         </a>
                                     </div>
                                 </div>
@@ -405,15 +426,15 @@ const Navbar2 = () => {
                             <a
                                 href="#"
                                 className="text-black-300 hover:bg-black-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-                            >Register</a>
+                            >Sign Up</a>
                             <a
                                 href="#"
                                 className="text-black-300 hover:bg-black-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-                            >Login</a>
+                            >Sign In</a>
                             <a
                                 href="#"
                                 className="text-black-300 hover:bg-black-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-                            >Log Out</a>
+                            >Sign Out</a>
                         </div>
                     </div>
                 </nav>

@@ -1,7 +1,7 @@
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {useEffect, useState} from "react";
-import {login, register} from "../../../services/auth.service";
+import {signIn, signUp} from "../../../services/auth.service";
 import IUser from "../../../types/user.type";
 import lights_on from "../../../assets/images/lights_on.png";
 import {NavigateFunction, useNavigate} from "react-router-dom";
@@ -10,7 +10,7 @@ interface RegistrationFormProps {
     userData: IUser | undefined
 }
 
-export default function RegistrationForm({userData}: RegistrationFormProps) {
+export default function SignUpForm({userData}: RegistrationFormProps) {
     const navigate: NavigateFunction = useNavigate();
     const [successful, setSuccessful] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
@@ -55,10 +55,10 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
             .required("This field is required!"),
     });
 
-    const handleRegister = (formValue: IUser) => {
+    const handleSignUp = (formValue: IUser) => {
         const {username, email, password} = formValue;
 
-        register(username, email, password)
+        signUp(username, email, password)
             .then((res) => {
                     setMessage(res.data.message);
                     setSuccessful(true);
@@ -80,9 +80,9 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
 
     };
 
-    function handleLogin() {
+    function handleSignIn() {
 
-        login(sessionStorage.getItem("usrnm")!, sessionStorage.getItem("pwrd")!)
+        signIn(sessionStorage.getItem("usrnm")!, sessionStorage.getItem("pwrd")!)
             .then(
                 () => {
                     navigate("/home");
@@ -114,7 +114,7 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
-                    onSubmit={handleRegister}
+                    onSubmit={handleSignUp}
                 >
                     <Form className={"col-start-1 col-span-3"}>
                         {!successful && (
@@ -180,8 +180,8 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
                 {successful ?
                     <div>
                         <div className="form-group">
-                            <button type="button" className="btn btn-proceed" onClick={handleLogin}>
-                                <span>Login</span>
+                            <button type="button" className="btn btn-proceed" onClick={handleSignIn}>
+                                <span>Sign In</span>
                             </button>
                         </div>
                     </div>

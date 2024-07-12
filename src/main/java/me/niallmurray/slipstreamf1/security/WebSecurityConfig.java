@@ -19,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
@@ -71,21 +70,18 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
-                    auth
-//                            .requestMatchers("/").permitAll()
-//                            .requestMatchers("/index.html").permitAll()
-                            .requestMatchers("/slipstream/**").permitAll()
-                            .requestMatchers("/api/auth/**").permitAll()
-                            .requestMatchers("/api/test/**").permitAll()
-                            .requestMatchers("/api/admin/**").permitAll()
-                            .requestMatchers("/api/user/**").permitAll()
-                            .requestMatchers("/api/league/**").permitAll()
-                            .requestMatchers("/api/team/**").permitAll()
-                            .requestMatchers("/api/driver/**").permitAll()
-                            .requestMatchers("/api/sse/**").permitAll()
-                            .requestMatchers("/ws-message/**").permitAll()
-                            .requestMatchers("/api/ping").permitAll()
-                            .anyRequest().authenticated()
+                            auth
+//                                    .requestMatchers("/**").permitAll()
+//                                    .requestMatchers("/index.html").permitAll()
+//                                    .requestMatchers("/api/test/**").permitAll()
+                                    .requestMatchers("/slipstream/**").permitAll()
+                                    .requestMatchers("/api/auth/**").permitAll()
+                                    .requestMatchers("/api/admin/**").permitAll()
+                                    .requestMatchers("/api/user/**").permitAll()
+                                    .requestMatchers("/api/league/**").permitAll()
+                                    .requestMatchers("/api/team/**").permitAll()
+                                    .requestMatchers("/api/driver/**").permitAll()
+                                    .anyRequest().authenticated()
             );
     http.authenticationProvider(authenticationProvider());
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -93,7 +89,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   }
 
 
-//  @Override
+  //  @Override
 //  public void addCorsMappings(CorsRegistry registry) {
 //    registry.addMapping("/api/**")
 //            .allowedOriginPatterns("*");

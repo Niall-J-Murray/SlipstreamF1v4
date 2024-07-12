@@ -2,14 +2,14 @@ import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import lights_on from "../../../assets/images/lights_on.png";
-import {login} from "../../../services/auth.service";
+import {signIn} from "../../../services/auth.service";
 import {useState} from "react";
 
 interface LoginFormProps {
     error: unknown
 }
 
-export default function LoginForm({error}: LoginFormProps) {
+export default function SignInForm({error}: LoginFormProps) {
     const navigate: NavigateFunction = useNavigate();
     const [loading, setLoading]
         = useState<boolean>(false);
@@ -30,12 +30,12 @@ export default function LoginForm({error}: LoginFormProps) {
             password: Yup.string().required("This field is required!"),
         });
 
-    const handleLogin = (formValue: { username: string; password: string }) => {
+    const handleSignIn = (formValue: { username: string; password: string }) => {
         const {username, password} = formValue;
         setMessage("");
         setLoading(true);
 
-        login(username.trim(), password.trim())
+        signIn(username.trim(), password.trim())
             .then(
                 () => {
                     navigate("/dashboard");
@@ -69,7 +69,7 @@ export default function LoginForm({error}: LoginFormProps) {
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
-                    onSubmit={handleLogin}
+                    onSubmit={handleSignIn}
                 >
                     <Form className={"col-start-1 col-span-3"}>
                         <div className="form-group">

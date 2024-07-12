@@ -97,6 +97,7 @@ public class TeamService {
       team.setTeamPoints(0.0);
       team.setIsTestTeam(true);
       team.setLeague(league);
+      team.setLeagueNumber(team.getLeague().getId());
 
       testUser.setTeam(team);
       addOneTeamToLeague(team);
@@ -248,11 +249,13 @@ public class TeamService {
     }
     league.getTeams().remove(team);
     user.setTeam(null);
+    team.setLeague(null);
+    team.setLeagueNumber(null);
 
     teamRepository.delete(team);
     userService.save(user);
     leagueService.save(league);
-    updateLeagueTeamsRankings(team.getLeague());
+    updateLeagueTeamsRankings(league);
   }
 
   public void deleteAllTestTeams(League league) {
@@ -304,6 +307,11 @@ public class TeamService {
 
   public List<Team> findAllTeams() {
     return teamRepository.findAll();
+  }
+
+  public void saveAllTeams(League league) {
+    teamRepository.saveAll(findAllTeamsByLeague(league));
+    leagueService.save(league);
   }
 
   public Team findById(Long teamId) {

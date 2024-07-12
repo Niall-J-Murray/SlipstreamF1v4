@@ -27,27 +27,4 @@ export default function Home({userData}: HomeProps) {
             </Layout>
         </>
     );
-    // return (
-    //     <>
-    //         <View props>
-    //             <BackgroundImage>
-    //                 <Navbar/>
-    //                 <Body>
-    //                     <div className="grid grid-cols-5 gap-2">
-    //                         <div className="col-start-2 col-span-1 box-shadow">
-    //                             {/*<HomeWelcome toggleLoading={props.toggleLoading}/>*/}
-    //                             <HomeWelcome/>
-    //                         </div>
-    //                         <div className="col-start-3 col-span-2 box-shadow">
-    //                             <AppDescription/>
-    //                         </div>
-    //                         <div className="col-start-2 col-span-3 box-shadow">
-    //                             <HowToPlay/>
-    //                         </div>
-    //                     </div>
-    //                 </Body>
-    //             </BackgroundImage>
-    //         </View>
-    //     </>
-    // );
 }

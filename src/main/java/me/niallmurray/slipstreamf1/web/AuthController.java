@@ -47,7 +47,7 @@ public class AuthController {
   @Autowired
   JwtUtils jwtUtils;
 
-  @PostMapping("/register")
+  @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
@@ -100,12 +100,10 @@ public class AuthController {
 
 
     userService.createUser(user);
-//    userRepository.save(user);
-//    Return user to automatically log in and redirect to dashboard?
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
-  @PostMapping("/login")
+  @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
     Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -127,11 +125,17 @@ public class AuthController {
             roles));
   }
 
-  @PostMapping("/logout")
+  @PostMapping("/signout")
   public ResponseEntity<?> updateUserLogout(@Valid @RequestBody String request) {
-    Long userId = Long.valueOf(request.substring(10, (request.length()-1)));
-    userService.updateLastLogout(userId);
-    System.out.println("User " + userId + ": '" + userService.findById(userId).getUsername() + "' logged out.");
+    Long userId = Long.valueOf(request.substring(10, (request.length() - 1)));
+
+    User user = userRepository.findById(userId).orElseThrow(null);
+    if (user != null) {
+      userService.updateLastLogout(userId);
+      if (user.getTeam() != null) {
+        teamService.saveAllTeams(user.getTeam().getLeague());
+      }
+    }
     return ResponseEntity.ok(new MessageResponse("Logout Successful"));
   }
 }

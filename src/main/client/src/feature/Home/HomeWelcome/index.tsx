@@ -1,4 +1,5 @@
 import IUser from "../../../types/user.type.ts";
+import {Link} from "react-router-dom";
 
 interface HomeWelcomeProps {
     userData: IUser | undefined
@@ -21,7 +22,7 @@ export default function HomeWelcome({userData}: HomeWelcomeProps) {
                     <h3>Welcome back
                         <br/>
                         {username}!</h3>
-                    <h4>Go to your <a href="/dashboard">Dashboard</a></h4>
+                    <h4>Go to your <Link to="/dashboard">Dashboard</Link></h4>
                     <h3>Team name: {team.teamName}</h3>
                     {team.teamPoints ?
                         <h3>Points: {team.teamPoints}</h3>
@@ -38,7 +39,7 @@ export default function HomeWelcome({userData}: HomeWelcomeProps) {
             <div>
                 <h3>Hello {username}!</h3>
                 <h4>You do not have a team yet.</h4>
-                <h4>Go to your <a href="/dashboard">Dashboard</a> to create a one.</h4>
+                <h4>Go to your <Link to="/dashboard">Dashboard</Link> to create a one.</h4>
             </div>
         );
     }
@@ -47,9 +48,9 @@ export default function HomeWelcome({userData}: HomeWelcomeProps) {
         return (
             <>
                 <h4>
-                    <a href="/login">Please Login</a>
+                    <Link to="/signin">Please Sign In</Link>
                     <br/><br/>- or -<br/><br/>
-                    <a href="/register">Register to play!</a>
+                    <Link to="/signup">Sign Up to play!</Link>
                 </h4>
             </>
         );

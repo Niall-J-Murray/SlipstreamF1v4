@@ -1,4 +1,5 @@
 import {HashLink} from "react-router-hash-link";
+import {Link} from "react-router-dom";
 
 export default function HowToPlay() {
     return (
@@ -7,15 +8,15 @@ export default function HowToPlay() {
             <div className="text-block">
                 <p>
                     Follow this {" "}
-                    <a href="https://vimeo.com/842933066" target="_blank">
+                    <Link to="https://vimeo.com/842933066" target="_blank">
                         link
-                    </a>{" "}
+                    </Link>{" "}
                     to see a short demonstration video on Vimeo.com.
                     <br/>
                     Or, follow the steps below, or once you{" "}
-                    <a href="register">register</a>, <a href="login">log-in</a> and
+                    <Link to="signup">register</Link>, <Link to="signin">log-in</Link> and
                     create a team, you can try a{" "}
-                    <HashLink smooth  to="/dashboard" elementId={"practice-draft-options"}>practice draft</HashLink> to
+                    <HashLink smooth to="/dashboard" elementId={"practice-draft-options"}>practice draft</HashLink> to
                     see how it works.
                     <br/>
                     Practice leagues can also be used to create real leagues with
@@ -70,12 +71,12 @@ export default function HowToPlay() {
                 <p>
                     For race schedules and more information on the Formula 1 World
                     Championship visit:
-                    <a
-                        href="https://www.formula1.com/en/racing/2023.html"
+                    <Link
+                        to="https://www.formula1.com/en/racing/2023.html"
                         target="_blank"
                     >
                         formula1.com
-                    </a>
+                    </Link>
                 </p>
             </div>
             {" "}
