@@ -78,7 +78,7 @@ public class DriverService {
   public List<Driver> removeInactiveDrivers() {
     // Filter out any drivers who are no longer active due to injury or being dropped by their team.
     List<Driver> driversStandings = sortDriversStanding();
-    driversStandings.removeIf((driver -> driver.getShortName().equalsIgnoreCase("BEA")));
+ //   driversStandings.removeIf((driver -> driver.getShortName().equalsIgnoreCase("BEA")));
     return driversStandings;
   }
 
