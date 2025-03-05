@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,25 +61,6 @@ public class UserService {
     return userRepository.existsByEmail(email) != null;
   }
 
-//  public boolean isLoggedIn(User user) {
-//    if (user != null) {
-//      return activeUserStore.getUsers().contains(user.getUsername());
-//    }
-//    return false;
-//  }
-
-//  public boolean isAdmin(User user) {
-//    if (user != null) {
-//      Set<Authority> authorities = user.getAuthorities();
-//      for (Authority authority : authorities) {
-//        if (authority.getAuthority().equals("ROLE_ADMIN")) {
-//          return true;
-//        }
-//      }
-//    }
-//    return false;
-//  }
-
   public void updateLastLogout(Long userId) {
     User user = findById(userId);
     user.setLastLogout(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm")));
@@ -100,5 +82,10 @@ public class UserService {
   public User delete(User user) {
     userRepository.delete(user);
     return user;
+  }
+
+  // For new users first login and to check for unsuccessful logouts.
+  public void processOAuthPostLogin(User user) {
+    // ... existing code ...
   }
 }

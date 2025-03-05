@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -21,14 +22,31 @@ public class LeagueController {
   @Autowired
   TeamService teamService;
 
+  @GetMapping("/all")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<List<League>> getAllLeagues() {
+    List<League> allLeagues = leagueService.findAll();
+    return ResponseEntity.ok(allLeagues);
+  }
+
+  @GetMapping("/{id}")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<League> getLeague(@PathVariable("id") Long leagueId) {
+    Optional<League> leagueOpt = leagueService.findLeagueById(leagueId);
+    return ResponseEntity.ok(leagueOpt.orElse(null));
+  }
+
+  @GetMapping("/{id}/teams")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<List<Team>> getLeagueTeams(@PathVariable("id") Long leagueId) {
+    List<Team> leagueTeams = teamService.findAllTeamsByLeagueId(leagueId);
+    return ResponseEntity.ok(leagueTeams);
+  }
+
   @GetMapping("/{leagueId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<League> getLeagueData(@PathVariable Long leagueId) {
-//    for (League league : leagueService.findAll()) {
-//      teamService.updateLeagueTeamsRankings(league);
-//    }
     League leagueById = leagueService.findById(leagueId);
-//    System.out.println("league entity: " + ResponseEntity.ok(leagueOpt.orElse(null)));
     return ResponseEntity.ok(leagueById);
   }
 
@@ -37,10 +55,9 @@ public class LeagueController {
   public ResponseEntity<League> getOpenLeague() {
     League availableLeague = leagueService.findAvailableLeague();
     if (!availableLeague.getTeams().isEmpty()
-            && availableLeague.getTeams().size() % 10 == 0) {
+        && availableLeague.getTeams().size() % 10 == 0) {
       availableLeague = leagueService.createLeague();
     }
-//    System.out.println("league entity: " + ResponseEntity.ok(leagueOpt.orElse(null)));
     return ResponseEntity.ok(availableLeague);
   }
 
@@ -48,10 +65,6 @@ public class LeagueController {
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<List<Team>> getAllLeagueTeams(@PathVariable Long leagueId) {
     List<Team> teams = leagueService.findAllTeamsInLeague(leagueId);
-//    League league = leagueService.findById(leagueId);
-//    List<Team> teams = teamService.findAllTeamsByLeague(league);
-//    System.out.println("league: " + league);
-//    System.out.println("league teams list: " + teams);
     return ResponseEntity.ok(teams);
   }
 
@@ -61,7 +74,6 @@ public class LeagueController {
     Team team = teamService.findById(teamId);
     Long leagueId = team.getLeague().getId();
     League league = leagueService.findById(leagueId);
-//    System.out.println("league entity: " + ResponseEntity.ok(leagueOpt.orElse(null)));
     return ResponseEntity.ok(league);
   }
 
@@ -96,8 +108,6 @@ public class LeagueController {
   @GetMapping("/{leagueId}/getNextUserToPick")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<User> getNextUserToPick(@PathVariable Long leagueId) {
-//    Integer leagueSize = leagueService.findById(leagueId).getTeams().size();
-//    Boolean isLeagueActive = leagueService.findById(leagueId).getIsActive();
     if (leagueService.getNextToPick(leagueId) != null) {
       return ResponseEntity.ok(leagueService.getNextToPick(leagueId));
     }
@@ -105,14 +115,10 @@ public class LeagueController {
   }
 
   @PostMapping("/{leagueId}/toggleTestLeague")
-//  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<Boolean> postToggleTestLeague(@PathVariable Long leagueId) {
     League league = leagueService.findById(leagueId);
     league.setIsPracticeLeague(Boolean.FALSE.equals(league.getIsPracticeLeague()));
     leagueService.save(league);
     return ResponseEntity.ok(league.getIsPracticeLeague());
   }
-
 }
-
-
