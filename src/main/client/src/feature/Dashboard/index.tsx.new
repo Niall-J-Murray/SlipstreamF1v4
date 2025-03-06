@@ -1,0 +1,265 @@
+import UserInfo from "./UserInfo";
+import DriverTable from "./DriverTable";
+import { useEffect, useState } from "react";
+import { postToggleTestLeague } from "../../services/league.service.ts";
+import DraftControls from "./DraftControls";
+import DraftPickTips from "./DraftPickTips";
+import IDriver from "../../types/driver.type.ts";
+import IUser from "../../types/user.type.ts";
+import {
+  useAllTeamsInLeague,
+  useLeagueData,
+  useNextPickNumber,
+  useNextUserToPick,
+  useOpenLeague,
+} from "../../hooks/queries/league-queries.ts";
+import {
+  useCreateTestTeam,
+  useDeleteTestTeams,
+} from "../../hooks/queries/team-queries.ts";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import {
+  useUndraftedDrivers,
+} from "../../hooks/queries/driver-queries.ts";
+// Additional imports for components we need
+import PreDraftLeagueTable from "./LeagueTable/PreDraftLeagueTable";
+import ActiveLeagueInfo from "./ActiveLeagueInfo";
+import ITeam from "../../types/team.type.ts";
+
+interface DashboardProps {
+  userData: undefined | IUser;
+}
+
+export default function Dashboard({ userData }: DashboardProps) {
+  const [selectedDriver, setSelectedDriver] = useState<IDriver | null>(null);
+  const [showDraftPickTips, setShowDraftPickTips] = useState<boolean>(false);
+  const [lastPickTime, setLastPickTime] = useState<string | null>(null);
+  const [lastDriverPicked, setLastDriverPicked] = useState<string | null>(null);
+  const [isPracticeLeague, setIsPracticeLeague] = useState<boolean | null>(false);
+  const [isLeagueActive, setIsLeagueActive] = useState<boolean>(false);
+  const [isLeagueFull, setIsLeagueFull] = useState<boolean>(false);
+  const [isDraftInProgress, setIsDraftInProgress] = useState<boolean | null>(false);
+  const [isUsersTurnToPick, setIsUsersTurnToPick] = useState<boolean>(false);
+  const [leagueSize, setLeagueSize] = useState<number | null>(0);
+  const [leagueId, setLeagueId] = useState<number | null>(0);
+  const [leagueTeams, setLeagueTeams] = useState<Array<ITeam> | null>([]);
+  const navigate: NavigateFunction = useNavigate();
+
+  const queryClient = useQueryClient();
+  const currentPickNumber = useNextPickNumber(leagueId).data;
+  const nextUserToPick = useNextUserToPick(leagueId).data;
+
+  const {
+    data: openLeague,
+    isLoading: loadingOpenLeague,
+    error: errOpenLeague,
+  } = useOpenLeague();
+
+  const {
+    data: leagueData,
+    isLoading: loadingLeagueData,
+    error: errLeagueData,
+  } = useLeagueData(openLeague?.id);
+
+  const { data: undraftedDrivers } = useUndraftedDrivers();
+
+  const { data: allTeamsInLeague } = useAllTeamsInLeague(leagueData?.id);
+
+  const createTestTeam = useCreateTestTeam();
+  const deleteTestTeams = useDeleteTestTeams();
+
+  const userId = userData?.id;
+
+  useEffect(() => {
+    if (leagueData) {
+      setLeagueId(leagueData.id);
+      setIsPracticeLeague(leagueData.isPracticeLeague);
+      setIsLeagueActive(leagueData.isActive || false);
+      setLeagueSize(leagueData.teams?.length || 0);
+      setLeagueTeams(allTeamsInLeague || []);
+      setIsDraftInProgress(leagueData.isDraftInProgress);
+      setIsLeagueFull(leagueData.teams?.length >= 10 || false);
+      
+      // Fix type issues with null handling
+      if (leagueData.lastDriverPickedName) {
+        setLastDriverPicked(leagueData.lastDriverPickedName);
+      }
+      
+      if (leagueData.lastPickTime) {
+        setLastPickTime(leagueData.lastPickTime);
+      }
+      
+      if (undraftedDrivers && undraftedDrivers.length > 0) {
+        const firstDriver = undraftedDrivers.find((driver: IDriver) => driver !== undefined);
+        if (firstDriver) {
+          setSelectedDriver(firstDriver);
+        }
+      }
+    }
+  }, [
+    leagueData,
+    allTeamsInLeague,
+    undraftedDrivers,
+    currentPickNumber,
+    nextUserToPick,
+    lastDriverPicked,
+  ]);
+
+  function togglePracticeOptions() {
+    setShowDraftPickTips(!showDraftPickTips);
+  }
+
+  function togglePracticeLeague() {
+    postToggleTestLeague(leagueId).then(() => {
+      queryClient.invalidateQueries().then(() => {
+        window.location.reload();
+      });
+    });
+  }
+
+  const addTestTeam = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    createTestTeam.mutateAsync(leagueId).then(() => {
+      queryClient.invalidateQueries().then(() => {
+        if (leagueSize === 9) {
+          window.location.reload();
+        }
+      });
+    });
+  };
+
+  const handleDeleteTestTeams = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    deleteTestTeams.mutateAsync(leagueId).then(() => {
+      queryClient.invalidateQueries().then(() => {
+        window.location.reload();
+      });
+    });
+  };
+
+  const handleDriverSelection = (driver: IDriver) => {
+    setSelectedDriver(driver);
+  };
+
+  const handlePick = (
+    e: { preventDefault: () => void },
+    driverId: number | undefined | null
+  ) => {
+    e.preventDefault();
+    if (driverId) {
+      // Logic for handling driver pick
+    }
+  };
+
+  const isLoading = loadingOpenLeague || loadingLeagueData;
+  const error = errOpenLeague || errLeagueData;
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="container mx-auto px-4">
+      <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+      
+      {/* Mobile-optimized layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* User info section */}
+        <div className="card p-4">
+          <UserInfo 
+            userData={userData}
+            leagueData={leagueData}
+            leagueSize={leagueSize}
+            isPracticeLeague={isPracticeLeague}
+            isLeagueFull={isLeagueFull}
+            isLeagueActive={isLeagueActive}
+            driversInTeam={[]}
+            initialValues={{ teamName: "" }}
+            validationSchema={{}}
+            loading={false}
+            message={""}
+            handleCreateTeam={() => {}}
+            handleDeleteUserTeam={() => {}}
+          />
+        </div>
+        
+        {/* League info section - stacked on mobile, side-by-side on larger screens */}
+        <div className="card p-4 md:col-span-2">
+          <div className="mb-4">
+            <h3 className="text-xl font-bold mb-2">League Information</h3>
+            {leagueData && (
+              <ActiveLeagueInfo 
+                undraftedDrivers={undraftedDrivers}
+                isPracticeLeague={isPracticeLeague}
+                handleDeleteTestTeams={handleDeleteTestTeams}
+              />
+            )}
+          </div>
+          
+          {/* Teams table - scrollable on mobile */}
+          <div className="overflow-x-auto">
+            {leagueTeams && leagueData && nextUserToPick !== undefined && (
+              <PreDraftLeagueTable 
+                leagueData={leagueData}
+                leagueTeams={leagueTeams}
+                leagueSize={leagueSize}
+                nextUserToPick={nextUserToPick}
+                isDraftInProgress={isDraftInProgress}
+              />
+            )}
+          </div>
+        </div>
+        
+        {/* Draft controls - full width on mobile */}
+        <div className="card p-4 md:col-span-3">
+          <div className="mb-4">
+            <h3 className="text-xl font-bold mb-2">Draft Controls</h3>
+            <DraftControls 
+              userData={userData}
+              leagueData={leagueData}
+              isPracticeLeague={isPracticeLeague}
+              isLeagueFull={isLeagueFull}
+              showDraftPickTips={showDraftPickTips}
+              selectedDriver={selectedDriver}
+              lastPickTime={lastPickTime}
+              lastDriverPicked={lastDriverPicked}
+              currentPickNumber={currentPickNumber}
+              isUsersTurnToPick={isUsersTurnToPick}
+              nextUserToPick={nextUserToPick}
+              togglePracticeOptions={togglePracticeOptions}
+              togglePracticeLeague={togglePracticeLeague}
+              addTestTeam={addTestTeam}
+              handlePick={handlePick}
+            />
+          </div>
+          
+          {/* Drivers table - scrollable on mobile */}
+          <div className="overflow-x-auto mt-6">
+            <h3 className="text-xl font-bold mb-2">Drivers</h3>
+            <DriverTable 
+              isDraftInProgress={isDraftInProgress}
+              isUsersTurnToPick={isUsersTurnToPick}
+              selectedDriver={selectedDriver}
+              undraftedDrivers={undraftedDrivers}
+              handleDriverSelection={handleDriverSelection}
+            />
+          </div>
+        </div>
+        
+        {/* Draft tips - always at the bottom */}
+        <div className="card p-4 md:col-span-3">
+          <DraftPickTips 
+            isPracticeLeague={isPracticeLeague}
+            showDraftPickTips={showDraftPickTips}
+            togglePracticeOptions={togglePracticeOptions}
+          />
+        </div>
+      </div>
+    </div>
+  );
+} 

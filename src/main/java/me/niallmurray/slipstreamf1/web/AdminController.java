@@ -94,11 +94,7 @@ public class AdminController {
     System.out.println("postDeleteTeam: " + teamId);
     Team team = teamService.findById(Long.valueOf(teamId));
     String teamname = team.getTeamName();
-    if (team != null) {
-      teamService.deleteTeam(team);
-    } else {
-      teamname = "Team not found";
-    }
+    teamService.deleteTeam(team);
     return ResponseEntity.ok(teamname);
   }
 

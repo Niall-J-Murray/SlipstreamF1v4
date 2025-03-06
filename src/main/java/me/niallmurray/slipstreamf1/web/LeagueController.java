@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -32,14 +31,15 @@ public class LeagueController {
   @GetMapping("/{id}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<League> getLeague(@PathVariable("id") Long leagueId) {
-    Optional<League> leagueOpt = leagueService.findLeagueById(leagueId);
-    return ResponseEntity.ok(leagueOpt.orElse(null));
+    League league = leagueService.findById(leagueId);
+    return ResponseEntity.ok(league);
   }
 
   @GetMapping("/{id}/teams")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<List<Team>> getLeagueTeams(@PathVariable("id") Long leagueId) {
-    List<Team> leagueTeams = teamService.findAllTeamsByLeagueId(leagueId);
+    League league = leagueService.findById(leagueId);
+    List<Team> leagueTeams = teamService.findAllTeamsByLeague(league);
     return ResponseEntity.ok(leagueTeams);
   }
 

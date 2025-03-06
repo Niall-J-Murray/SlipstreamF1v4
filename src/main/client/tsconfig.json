@@ -3,6 +3,12 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": [
+      "@types/estree",
+      "@types/history",
+      "@types/jest",
+      "@types/json-schema"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
 

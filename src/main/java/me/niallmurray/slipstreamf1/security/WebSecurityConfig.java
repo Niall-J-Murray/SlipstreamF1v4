@@ -23,6 +23,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.springframework.web.servlet.resource.ResourceResolverChain;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -65,65 +67,49 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(exception ->
-                    exception.authenticationEntryPoint(unauthorizedHandler))
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth ->
-                            auth
-//                                    .requestMatchers("/**").permitAll()
-//                                    .requestMatchers("/index.html").permitAll()
-//                                    .requestMatchers("/api/test/**").permitAll()
-                                    .requestMatchers("/slipstream/**").permitAll()
-                                    .requestMatchers("/api/auth/**").permitAll()
-                                    .requestMatchers("/api/admin/**").permitAll()
-                                    .requestMatchers("/api/user/**").permitAll()
-                                    .requestMatchers("/api/league/**").permitAll()
-                                    .requestMatchers("/api/team/**").permitAll()
-                                    .requestMatchers("/api/driver/**").permitAll()
-                                    .anyRequest().authenticated()
-            );
+        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/slipstream/**").permitAll()
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/admin/**").permitAll()
+            .requestMatchers("/api/user/**").permitAll()
+            .requestMatchers("/api/league/**").permitAll()
+            .requestMatchers("/api/team/**").permitAll()
+            .requestMatchers("/api/driver/**").permitAll()
+            .anyRequest().authenticated());
     http.authenticationProvider(authenticationProvider());
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 
-
-  //  @Override
-//  public void addCorsMappings(CorsRegistry registry) {
-//    registry.addMapping("/api/**")
-//            .allowedOriginPatterns("*");
-//  }
-
   @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+  public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
     this.serveDirectory(registry, "/slipstream", "classpath:/slipstream/");
   }
 
-  private void serveDirectory(ResourceHandlerRegistry registry, String endpoint, String location) {
+  private void serveDirectory(@NonNull ResourceHandlerRegistry registry, @NonNull String endpoint,
+      @NonNull String location) {
     String[] endpointPatterns = endpoint.endsWith("/")
-            ? new String[]{endpoint.substring(0, endpoint.length() - 1), endpoint, endpoint + "**"}
-            : new String[]{endpoint, endpoint + "/", endpoint + "/**"};
+        ? new String[] { endpoint.substring(0, endpoint.length() - 1), endpoint, endpoint + "**" }
+        : new String[] { endpoint, endpoint + "/", endpoint + "/**" };
     registry
-            .addResourceHandler(endpointPatterns)
-            .addResourceLocations(location.endsWith("/") ? location : location + "/")
-            /*
-             * The resolver below only matches if there hasn't been any other match for the current path
-             * @Controller methods still have priority, for instance
-             *
-             * It defaults to serving "index.html" if there's no actual static resource at the given path,
-             * which is useful for SPAs with client-side routing
-             */
-            .resourceChain(false)
-            .addResolver(new PathResourceResolver() {
-              @Override
-              public Resource resolveResource(HttpServletRequest request, String requestPath, List<? extends Resource> locations, ResourceResolverChain chain) {
-                Resource resource = super.resolveResource(request, requestPath, locations, chain);
-                if (nonNull(resource)) {
-                  return resource;
-                }
-                return super.resolveResource(request, "/index.html", locations, chain);
-              }
-            });
+        .addResourceHandler(endpointPatterns)
+        .addResourceLocations(location.endsWith("/") ? location : location + "/")
+        .resourceChain(false)
+        .addResolver(new PathResourceResolver() {
+          @Override
+          public Resource resolveResource(
+              @Nullable HttpServletRequest request,
+              @NonNull String requestPath,
+              @NonNull List<? extends Resource> locations,
+              @NonNull ResourceResolverChain chain) {
+            Resource resource = super.resolveResource(request, requestPath, locations, chain);
+            if (nonNull(resource)) {
+              return resource;
+            }
+            return super.resolveResource(request, "/index.html", locations, chain);
+          }
+        });
   }
 }

@@ -57,11 +57,24 @@ export default function App() {
   const error = errUserAuth || errUserData;
 
   if (error) {
+    console.error("Application error:", error);
     return (
       <div className="app-container flex items-center justify-center">
-        <div className="card p-4 text-center">
-          <h2>Error:</h2>
-          <p>{error.message}</p>
+        <div className="card p-4 text-center max-w-md w-full">
+          <h2 className="text-xl text-red-600 font-bold mb-4">
+            Error Occurred
+          </h2>
+          <p className="mb-4">
+            {error instanceof Error
+              ? error.message
+              : "An unexpected error has occurred. Please try again later."}
+          </p>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={() => window.location.reload()}
+          >
+            Reload Application
+          </button>
         </div>
       </div>
     );
@@ -86,7 +99,7 @@ export default function App() {
             path="/"
             element={
               <Layout>
-                <Home user={userAuth} />
+                <Home userData={userAuth || undefined} />
               </Layout>
             }
           />
@@ -94,7 +107,7 @@ export default function App() {
             path="/home"
             element={
               <Layout>
-                <Home user={userAuth} />
+                <Home userData={userAuth || undefined} />
               </Layout>
             }
           />
@@ -102,7 +115,7 @@ export default function App() {
             path="/signup"
             element={
               <Layout>
-                <SignUp />
+                <SignUp userData={userAuth || undefined} />
               </Layout>
             }
           />
@@ -110,7 +123,16 @@ export default function App() {
             path="/signin"
             element={
               <Layout>
-                <SignIn />
+                <SignIn
+                  userData={userAuth || undefined}
+                  error={
+                    error
+                      ? error instanceof Error
+                        ? { message: error.message }
+                        : { message: "An unknown error occurred" }
+                      : {}
+                  }
+                />
               </Layout>
             }
           />
@@ -118,7 +140,7 @@ export default function App() {
             path="/signout"
             element={
               <Layout>
-                <SignOut />
+                <SignOut userData={userAuth || undefined} />
               </Layout>
             }
           />
@@ -126,7 +148,7 @@ export default function App() {
             path="/profile"
             element={
               <Layout>
-                <Profile userData={userData} />
+                <Profile userData={userData || undefined} />
               </Layout>
             }
           />
@@ -134,7 +156,7 @@ export default function App() {
             path="/dashboard"
             element={
               <Layout>
-                <Dashboard userData={userData} />
+                <Dashboard userData={userData || undefined} />
               </Layout>
             }
           />
@@ -142,7 +164,7 @@ export default function App() {
             path="/admin"
             element={
               <Layout>
-                <Admin user={userAuth} />
+                <Admin userData={userData || undefined} />
               </Layout>
             }
           />

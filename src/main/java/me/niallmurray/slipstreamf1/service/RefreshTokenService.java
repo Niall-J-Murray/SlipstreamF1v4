@@ -11,20 +11,17 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @Service
 public class RefreshTokenService {
   @Value("${jwt.refreshExpirationInMillisecs}")
   private Long refreshExpirationInMillisecs;
   private UserDetailsServiceImpl userDetailsServiceImpl;
   private RefreshTokenRepository refreshTokenRepo;
-  private JwtService jwtService;
 
-  public RefreshTokenService(UserDetailsServiceImpl userDetailsServiceImpl, RefreshTokenRepository refreshTokenRepo, JwtService jwtService) {
+  public RefreshTokenService(UserDetailsServiceImpl userDetailsServiceImpl, RefreshTokenRepository refreshTokenRepo) {
     super();
     this.userDetailsServiceImpl = userDetailsServiceImpl;
     this.refreshTokenRepo = refreshTokenRepo;
-    this.jwtService = jwtService;
   }
 
   private Date getExpirationTime() {
@@ -52,7 +49,6 @@ public class RefreshTokenService {
         refreshToken.setExpirationTime(getExpirationTime());
         System.out.println("old: " + refreshToken);
       } else {
-//        refreshToken = new RefreshToken(userOpt.get(), generateUUID(), getExpirationTime());
         refreshToken = new RefreshToken();
         refreshToken.setUser(userOpt.get());
         refreshToken.setTokenValue(generateUUID());
@@ -65,23 +61,15 @@ public class RefreshTokenService {
     return null;
   }
 
-  private static RefreshToken isNonExpired(RefreshToken refreshToken) {
-    if (refreshToken.getExpirationTime().after(new Date())) {
-      return refreshToken;
-    } else {
-      throw new IllegalArgumentException("Refresh Token has expired");
-    }
-  }
-
-//  public String createNewAccessToken(RefreshTokenRequest refreshTokenRequest) {
-//    Optional<RefreshToken> refreshTokenOpt = refreshTokenRepo.findByTokenValue(refreshTokenRequest.getRefreshToken());
-//
-//    String accessToken = refreshTokenOpt.map(RefreshTokenService::isNonExpired)
-//            .map(refreshToken -> jwtService.generateToken(new HashMap<>(), refreshToken.getUser()))
-//            .orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
-//
-//    return accessToken;
-//  }
+  // public String createNewAccessToken(RefreshTokenRequest refreshTokenRequest) {
+  // Optional<RefreshToken> refreshTokenOpt =
+  // refreshTokenRepo.findByTokenValue(refreshTokenRequest.getRefreshToken());
+  //
+  // String accessToken = refreshTokenOpt.map(RefreshTokenService::isNonExpired)
+  // .map(refreshToken -> jwtService.generateToken(new HashMap<>(),
+  // refreshToken.getUser()))
+  // .orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
+  //
+  // return accessToken;
+  // }
 }
-
-

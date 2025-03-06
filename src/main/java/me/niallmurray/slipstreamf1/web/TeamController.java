@@ -10,8 +10,7 @@ import me.niallmurray.slipstreamf1.service.TeamService;
 import me.niallmurray.slipstreamf1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.annotation.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,31 +31,31 @@ public class TeamController {
   @GetMapping("/all")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<List<Team>> getAllTeams() {
-    List<Team> allTeams = teamService.findAll();
+    List<Team> allTeams = teamService.findAllTeams();
     return ResponseEntity.ok(allTeams);
   }
 
   @GetMapping("/{id}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<Team> getTeam(@PathVariable("id") Long teamId) {
-    Optional<Team> teamOpt = teamService.findTeamById(teamId);
-    return ResponseEntity.ok(teamOpt.orElse(null));
+    Team team = teamService.findById(teamId);
+    return ResponseEntity.ok(team);
   }
 
   @PostMapping("/add")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<Team> addTeam(@RequestBody Team team) {
-    team = teamService.save(team);
-    return ResponseEntity.ok(team);
+    User user = team.getUser();
+    String teamName = team.getTeamName();
+    Team savedTeam = teamService.createTeam(user, teamName);
+    return ResponseEntity.ok(savedTeam);
   }
 
   @DeleteMapping("/user/{userId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<?> deleteTeamByUser(@PathVariable("userId") Long userId,
       @RequestBody Team team) {
-    User user = userService.findById(userId);
-    League league = team.getLeague();
-    teamService.deleteByTeamId(team.getId());
+    teamService.deleteTeam(team);
     return ResponseEntity.ok(team);
   }
 
@@ -80,7 +79,6 @@ public class TeamController {
   public ResponseEntity<User> postDeleteTeam(@PathVariable Long userId) {
     User user = userService.findById(userId);
     Team team = user.getTeam();
-    League league = team.getLeague();
 
     teamService.deleteTeam(team);
     return ResponseEntity.ok(user);
